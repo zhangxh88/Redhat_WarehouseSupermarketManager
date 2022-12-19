@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.redhat.mall.dao.SystemUserMapper">
+    <select id="findById" parameterType="string"
+            resultType="com.redhat.mall.controller.system.resp.SystemUserResp">
+        select id, username, status, create_time, create_user,
+        update_time, update_user, remark
+        from t_system_user
+        where id = #{id}
+    </select>
+
+    <select id="findAllList" parameterType="hashmap"
+            resultType="com.redhat.mall.controller.system.resp.SystemUserResp">
+        select id, username, status, create_time, create_user,
+        update_time, update_user, remark
+        from t_system_user
+        where 1 = 1
+        <if test="username != null and username != ''">
+            and username like concat('%', #{username}, '%')
+        </if>
+    </select>
+
+    <select id="count" parameterType="hashmap"
+            resultType="long">
+        select count(1)
+        from t_system_user
+        where 1 = 1
+        <if test="username != null and username != ''">
+            and username like concat('%', #{username}, '%')
+        </if>
+    </select>
+
+    <select id="findListByPage" parameterType="hashmap"
+            resultType="com.redhat.mall.controller.system.resp.SystemUserResp">
+        select id, username, status, create_time, create_user,
+        update_time, update_user, remark
+        from t_system_user
+        where 1 = 1
+        <if test="username != null and username != ''">
+            and username like concat('%', #{username}, '%')
+        </if>
+        order by update_time desc
+        limit #{offset}, #{pageSize}
+    </select>
+
+    <insert id="save" parameterType="com.redhat.mall.domain.SystemUser">
+        insert into t_system_user(id, username, password, status, create_time, create_user,
+            update_time, update_user, remark)
+        values(#{id}, #{username}, #{password}, #{status}, #{createTime}, #{createUser},
+            #{updateTime}, #{updateUser}, #{remark})
+    </insert>
+
+    <update id="update" parameterType="com.redhat.mall.domain.SystemUser">
+        update t_system_user set
+        update_time = #{updateTime},
+        update_user = #{updateUser},
+        remark = #{remark}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="string">
+        delete from t_system_user
+        where id = #{id}
+    </delete>
+</mapper>
